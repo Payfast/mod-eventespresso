@@ -86,6 +86,7 @@ function espresso_display_payfast($payment_data)
 	$myPayfast->addField('city', $city);
 	$myPayfast->addField('state', $state);
 	$myPayfast->addField('zip', $zip);
+    $myPayfast->addField('custom_str1', $registration_id);
     //$myPayfast->addField('m_instruction_id', $registration_id);
     //$myPayfast->addField('m_payment_id', $attendee_id);
     
