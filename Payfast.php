@@ -26,7 +26,7 @@ require_once('payfast_common.inc');
 class EE_Payfast extends PaymentGateway 
 {
 
-	public $gateway_version = '1.0.0';
+	public $gateway_version = '1.1.0';
     private $curlUrl='';
     private $pfHost='';
     private $attendee_session_id='';
