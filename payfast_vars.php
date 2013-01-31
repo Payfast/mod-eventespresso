@@ -48,20 +48,24 @@ function espresso_display_payfast($payment_data)
 	$myPayfast->addField('upload', '1');
 	$sql = "SELECT attendee_session FROM " . EVENTS_ATTENDEE_TABLE . " WHERE id='" . $attendee_id . "'";
 	$session_id = $wpdb->get_var($sql);
-	$sql = "SELECT ac.cost, ac.quantity, ed.event_name, a.price_option, a.fname, a.lname, dc.coupon_code_price, dc.use_percentage FROM " . EVENTS_ATTENDEE_COST_TABLE . " ac JOIN " . EVENTS_ATTENDEE_TABLE . " a ON ac.attendee_id=a.id JOIN " . EVENTS_DETAIL_TABLE . " ed ON a.event_id=ed.id ";
-	$sql .= " LEFT JOIN " . EVENTS_DISCOUNT_CODES_TABLE . " dc ON a.coupon_code=dc.coupon_code ";
-	$sql .= " WHERE attendee_session='" . $session_id . "'";
-	$items = $wpdb->get_results($sql);
+	
+    $sql = "SELECT ed.event_name, a.price_option, a.fname, a.lname, dc.coupon_code_price, dc.use_percentage
+            FROM " . EVENTS_ATTENDEE_TABLE . " a
+            JOIN " . EVENTS_DETAIL_TABLE . " ed 
+            ON a.event_id = ed.id
+            LEFT JOIN " . EVENTS_DISCOUNT_CODES_TABLE . " dc 
+            ON a.coupon_code = dc.coupon_code
+            WHERE attendee_session = '" . $session_id . "'";
+
+    $items = $wpdb->get_results($sql);
 	$coupon_amount = empty( $items[0]->coupon_code_price ) ? 0 : $items[0]->coupon_code_price;
 	$is_coupon_pct = ( !empty( $items[0]->use_percentage ) && $items[0]->use_percentage == 'Y' ) ? true : false;
 	
     //payfast sends through only one amount - cart total
     $cartTotal = 0;
-    foreach ($items as $key=>$item) 
-    {
-		$myPayfast->addField('item_name', $item->price_option . ' for ' . $item->event_name . '. Attendee: '. $item->fname . ' ' . $item->lname);
-	}
-
+    
+    $myPayfast->addField('item_name', $items[0]->price_option . ' for ' . $items[0]->event_name . '. Attendee: '. $items[0]->fname . ' ' . $items[0]->lname);
+	
 	if (!empty($coupon_amount)) 
     {
 		if ($is_coupon_pct) 
