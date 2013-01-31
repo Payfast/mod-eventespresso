@@ -51,6 +51,7 @@ class EE_Payfast extends PaymentGateway
 		$this->ipnLogFile = EVENT_ESPRESSO_UPLOAD_DIR . 'logs/payfast.ipn_results.log';
 		// Populate $fields array with a few default
 		$this->addField('rm', '2');	 // Return method = POST
+		$this->addField('cmd', '_xclick');
     }
 
 	/**
