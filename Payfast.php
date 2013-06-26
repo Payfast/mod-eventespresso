@@ -26,7 +26,7 @@ require_once('payfast_common.inc');
 class EE_Payfast extends Espresso_PaymentGateway 
 {
 
-	public $gateway_version = '1.1.2';
+	public $gateway_version = '1.1.3';
     private $curlUrl='';
     private $pfHost='';
     private $attendee_session_id='';
