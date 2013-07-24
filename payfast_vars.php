@@ -40,7 +40,7 @@ function espresso_display_payfast($payment_data)
 	}
     
     $myPayfast->addField('return_url', $home . '/?page_id=' . $org_options['return_url'] . '&r_id=' . $registration_id. '&type=payfast');
-	$myPayfast->addField('cancel_return', $home . '/?page_id=' . $org_options['cancel_return']);
+	$myPayfast->addField('cancel_url', $home . '/?page_id=' . $org_options['cancel_return']);
 	$myPayfast->addField('notify_url', $home . '/?page_id=' . $org_options['notify_url'] . '&id=' . $attendee_id . '&r_id=' . $registration_id . '&event_id=' . $event_id . '&attendee_action=post_payment&form_action=payment&type=payfast');
 	
     $event_name = $wpdb->get_var('SELECT event_name FROM ' . EVENTS_DETAIL_TABLE . " WHERE id='" . $event_id . "'");
@@ -83,9 +83,9 @@ function espresso_display_payfast($payment_data)
 	$myPayfast->addField('currency_code', $payfast_cur);
 	$myPayfast->addField('image_url', empty($payfast_settings['image_url']) ? '' : $payfast_settings['image_url']);
 	$myPayfast->addField('no_shipping ', $no_shipping);
-	$myPayfast->addField('first_name', $fname);
-	$myPayfast->addField('last_name', $lname);
-	$myPayfast->addField('email', $attendee_email);
+	$myPayfast->addField('name_firs', $fname);
+	$myPayfast->addField('name_last', $lname);
+	$myPayfast->addField('email_address', $attendee_email);
 	$myPayfast->addField('address1', $address);
 	$myPayfast->addField('city', $city);
 	$myPayfast->addField('state', $state);
