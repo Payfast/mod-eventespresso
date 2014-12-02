@@ -1,4 +1,5 @@
-PayFast EventEspresso Payment Module v1.1.4 for EventEspresso v3.1.29 and higher
+PayFast EventEspresso Payment Module v1.2.0 for EventEspresso v3.1.29 and higher
+Latest Test with EE v3.1.36.6.P
 --------------------------------------------------------------
 Copyright © 2012 PayFast (Pty) Ltd
 

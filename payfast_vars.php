@@ -20,17 +20,24 @@ function espresso_display_payfast($payment_data)
     $no_shipping = isset($payfast_settings['no_shipping']) ? $payfast_settings['no_shipping'] : '0';
     $use_sandbox = $payfast_settings['use_sandbox'];
     
-    $myPayfast->addField('merchant_key', $payfast_settings['payfast_merchant_key']);
-    $myPayfast->addField('merchant_id', $payfast_settings['payfast_merchant_id']);
     
     
-    if ($use_sandbox) 
+    
+    if( $use_sandbox ) 
     {
         $myPayfast->enableTestMode();
+        $myPayfast->addField( 'merchant_key', '46f0cd694581a' );
+        $myPayfast->addField( 'merchant_id', '10000100' );
     }
+    else
+    {
+        $myPayfast->addField( 'merchant_key', $payfast_settings['payfast_merchant_key'] );
+        $myPayfast->addField( 'merchant_id', $payfast_settings['payfast_merchant_id'] );
+    }
+
     if ($payfast_settings['force_ssl_return']) 
     {
-        $home = str_replace("http://", "https://", home_url());
+        $home = str_replace("http://", "https://", home_url() );
     } 
     else 
     {
@@ -62,9 +69,9 @@ function espresso_display_payfast($payment_data)
     
     $myPayfast->addField('item_name', $items[0]->price_option . ' for ' . $items[0]->event_name . '. Attendee: '. $items[0]->fname . ' ' . $items[0]->lname);
     
-    if (!empty($coupon_amount)) 
+    if ( !empty( $coupon_amount ) ) 
     {
-        if ($is_coupon_pct) 
+        if ( $is_coupon_pct ) 
         {
             $myPayfast->addField('discount_rate_cart', $coupon_amount);
         } 
