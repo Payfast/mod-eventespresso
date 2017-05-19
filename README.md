@@ -21,9 +21,9 @@ INTEGRATION:
 - Password: clientpass
 
 ******************************************************************************
-*                                                                            *
-*    Please see the URL below for all information concerning this module:    *
-*                                                                            *
-*        https://www.payfast.co.za/shopping-carts/event-espresso/            *
-*                                                                            *
+
+    Please see the URL below for all information concerning this module:
+
+        https://www.payfast.co.za/shopping-carts/event-espresso/
+
 ******************************************************************************
