@@ -1,10 +1,6 @@
 PayFast EventEspresso Payment Module v1.2.0 for EventEspresso v3.1.29 and higher
 Latest Test with EE v3.1.36.6.P
 --------------------------------------------------------------
-Update all plugins with copyright notice:
-Copyright (c) 2008 PayFast (Pty) Ltd
-You (being anyone who is not PayFast (Pty) Ltd) may download and use this plugin / code in your own website in conjunction with a registered and active PayFast account. If your PayFast account is terminated for any reason, you may not use this plugin / code or part thereof.
-Except as expressly indicated in this licence, you may not use, copy, modify or distribute this plugin / code or part thereof in any way.
 
 INTEGRATION:
 1. Make sure you have a working WordPress and EventEspresso install
