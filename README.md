@@ -6,10 +6,4 @@ INTEGRATION:
 2. Using FTP (or similar), copy the Payfast file to the payment_methods folder found in the EE directory. Alternatively, compress the "Payfast" subfolder and upload the zipped folder via the plugin upload on the admin dashboard of you WordPress site.
 3. Navigate to EE payment methods>Payfast. Activate Payfast and setup accordingly. Note: debug mode refers to sandbox or test mode.
 
-******************************************************************************
-
-    Please see the URL below for more information concerning this module:
-
-            https://payfast.io/integration/shopping-carts/event-espresso/
-
-******************************************************************************
+Please [click here](https://payfast.io/integration/shopping-carts/event-espresso/) for more information concerning this module.
