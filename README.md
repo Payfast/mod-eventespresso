@@ -1,15 +1,23 @@
 # mod-eventespresso
 
-INTEGRATION:
+## Payfast module v1.1.9 for Event Espresso v4.10.46
 
-1. Setup ZAR on EE: navigate to EE general settings>country. Change country to South Africa, change currency code to ZAR, name to Rand, and symbol to R (leave country ISO code as US).
-2. Using FTP (or similar), copy the Payfast file to the payment_methods folder found in the EE directory. Alternatively, compress the "Payfast" subfolder and upload the zipped folder via the plugin upload on the admin dashboard of you WordPress site.
-3. Navigate to EE payment methods>Payfast. Activate Payfast and setup accordingly. Note: debug mode refers to sandbox or test mode.
+This is the Payfast module for Event Espresso. Please feel free
+to [contact the Payfast support team](https://payfast.io/contact/) should you require any assistance.
 
-******************************************************************************
+## Installation
 
-    Please see the URL below for more information concerning this module:
+1. Navigate to **Event Espresso > General Settings > Country**. Change **Countries and States/Provinces** to **South
+   Africa**, change **Country Currency Code** to **ZAR**, **Currency Name Singular** to **Rand**, **Currency Name Plural
+   ** to **Rands**, **Currency Sign** to **R**, and **Country ISO3 Code** to **ZAF**.
+2. Using FTP (or similar), merge the contents of the **event-espresso-decaf** directory with contents of the
+   events-espresso directory inside **wp-content/plugins/event-espresso-decaf** of your site.
+3. Navigate to **Event Espresso > Payment Methods > Payfast**. Click **Activate Payfast Payment Method?** and setup
+   accordingly.
 
-            https://payfast.io/integration/shopping-carts/event-espresso/
+Please [click here](https://payfast.io/integration/plugins/event-espresso/) for more information concerning this
+module.
 
-******************************************************************************
+## Collaboration
+
+Please submit pull requests with any tweaks, features or fixes you would like to share.
