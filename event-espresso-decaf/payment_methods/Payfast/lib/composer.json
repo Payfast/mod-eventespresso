@@ -1,0 +1,14 @@
+{
+  "name": "payfast/eventespresso-payfast",
+  "type": "library",
+  "license": "GNU",
+  "autoload": {
+    "psr-4": {
+      "Payfast\\EventEspressoPayfast\\": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "payfast/payfast-common": "v1.0.2"
+  }
+}
