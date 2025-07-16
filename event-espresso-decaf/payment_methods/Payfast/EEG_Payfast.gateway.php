@@ -5,13 +5,13 @@ if (!defined('EVENT_ESPRESSO_VERSION')) {
 }
 require_once __DIR__ . "/lib/vendor/autoload.php";
 
-use Payfast\PayfastCommon\PayfastCommon;
+use Payfast\PayfastCommon\Aggregator\Request\PaymentRequest;
 
 class EEG_Payfast extends EE_Offsite_Gateway
 {
-    protected ?string $_payfast_merchant_id = '';
+    protected ?string $_payfast_merchant_id  = '';
     protected ?string $_payfast_merchant_key = '';
-    protected ?string $_payfast_passphrase = '';
+    protected ?string $_payfast_passphrase   = '';
 
     protected $_currencies_supported = array('ZAR');
 
@@ -38,7 +38,7 @@ class EEG_Payfast extends EE_Offsite_Gateway
         $return_url = null,
         $notify_url = null,
         $cancel_url = null
-    ) {
+    ){
         $transaction        = $payment->transaction();
         $primary_registrant = $transaction->primary_registration();
         $primary_attendee   = $primary_registrant->attendee();
@@ -80,48 +80,45 @@ class EEG_Payfast extends EE_Offsite_Gateway
         return $payment;
     }
 
+    /**
+     * @throws ReflectionException
+     * @throws EE_Error
+     */
     public function handle_payment_update($update_info, $transaction)
     {
-        PayfastCommon::pflog('Payfast ITN call received');
-        define("PF_DEBUG", $this->_debug_mode);
-        // User agent constituents (for cURL)
-        define('PF_SOFTWARE_NAME', 'Event Espresso');
-        define('PF_SOFTWARE_VER', "4.10.46");
-        define('PF_MODULE_NAME', 'Payfast-EventEspresso');
-        define('PF_MODULE_VER', '1.1.9');
+        $payfastRequest = new PaymentRequest($this->_debug_mode);
+        $payfastRequest->pflog('Payfast ITN call received');
 
         $pfError       = false;
         $pfErrMsg      = '';
         $pfDone        = false;
-        $pfData        = array();
         $pfParamString = '';
 
         //// Notify Payfast that information has been received
         $this->notifyPayfast();
 
-        PayfastCommon::pflog('Get posted data');
-
         // Posted variables from ITN
-        $pfData = PayfastCommon::pfGetData();
+        $payfastRequest->pflog('Get posted data');
+        $pfData = $payfastRequest->pfGetData();
 
-        PayfastCommon::pflog('Payfast Data: ' . print_r($pfData, true));
+        $payfastRequest->pflog('Payfast Data: ' . print_r($pfData, true));
 
         if ($pfData === false) {
             $pfError  = true;
-            $pfErrMsg = PayfastCommon::PF_ERR_BAD_ACCESS;
+            $pfErrMsg = $payfastRequest::PF_ERR_BAD_ACCESS;
         }
 
         //// Verify security signature
-        if (!$pfError && !$pfDone) {
-            PayfastCommon::pflog('Verify security signature');
+        if (!$pfError) {
+            $payfastRequest->pflog('Verify security signature');
 
             $passPhrase   = $this->_payfast_passphrase;
             $pfPassPhrase = empty($passPhrase) ? null : $passPhrase;
 
             // If signature different, log for debugging
-            if (!PayfastCommon::pfValidSignature($pfData, $pfParamString, $pfPassPhrase)) {
+            if (!$payfastRequest->pfValidSignature($pfData, $pfParamString, $pfPassPhrase)) {
                 $pfError  = true;
-                $pfErrMsg = PayfastCommon::PF_ERR_INVALID_SIGNATURE;
+                $pfErrMsg = $payfastRequest::PF_ERR_INVALID_SIGNATURE;
             }
         }
 
@@ -129,13 +126,19 @@ class EEG_Payfast extends EE_Offsite_Gateway
 
         //// Verify data received
         if (!$pfError) {
-            PayfastCommon::pflog('Verify data received');
+            $payfastRequest->pflog('Verify data received');
 
-            $pfValid = PayfastCommon::pfValidData($pfHost, $pfParamString);
+            $moduleInfo = [
+                "pfSoftwareName"       => 'Event Espresso',
+                "pfSoftwareVer"        => '4.10.46',
+                "pfSoftwareModuleName" => 'Payfast-EventEspresso',
+                "pfModuleVer"          => '1.2.0',
+            ];
+            $pfValid    = $payfastRequest->pfValidData($moduleInfo, $pfHost, $pfParamString);
 
             if (!$pfValid) {
                 $pfError  = true;
-                $pfErrMsg = PayfastCommon::PF_ERR_BAD_ACCESS;
+                $pfErrMsg = $payfastRequest::PF_ERR_BAD_ACCESS;
             }
         }
 
@@ -145,13 +148,13 @@ class EEG_Payfast extends EE_Offsite_Gateway
         }
 
         //// Check data against internal order
-        if (!$pfError && !$pfDone) {
-            PayfastCommon::pflog('Check data against internal order');
+        if (!$pfError) {
+            $payfastRequest->pflog('Check data against internal order');
 
             // Check order amount
-            if (!PayfastCommon::pfAmountsEqual($pfData['amount_gross'], $payment->amount())) {
+            if (!$payfastRequest->pfAmountsEqual($pfData['amount_gross'], $payment->amount())) {
                 $pfError  = true;
-                $pfErrMsg = PayfastCommon::PF_ERR_AMOUNT_MISMATCH;
+                $pfErrMsg = $payfastRequest::PF_ERR_AMOUNT_MISMATCH;
             }
         }
 
@@ -161,16 +164,18 @@ class EEG_Payfast extends EE_Offsite_Gateway
             return $payment;
         }
 
-        list($status, $gateway_response) = $this->processPayment($pfError, $pfDone, $pfData);
+        list($status, $gateway_response) = $this->processPayment($pfError, $pfDone, $pfData, $payfastRequest);
 
-        $this->checkError($pfError, $pfErrMsg);
+        $this->checkError($pfError, $pfErrMsg, $payfastRequest);
+
+        $payment->set_txn_id_chq_nmbr($pfData['pf_payment_id'] ?? '');
 
         $this->isPaymentProcessed($payment, $status, $pfData['amount_gross'], $update_info, $gateway_response);
 
         return $payment;
     }
 
-    public function validate_ipn($update_info, $payment)
+    public function validate_ipn($update_info, $payment): bool
     {
         if (apply_filters('FHEE__EEG_Payfast__validate_ipn__skip', true)) {
             return true;
@@ -186,7 +191,7 @@ class EEG_Payfast extends EE_Offsite_Gateway
                 }
             }
         }
-
+        $req    = http_build_query($update_info);
         $result = wp_remote_post(
             $this->_gateway_url,
             array('body' => $req ?? [], 'sslverify' => false, 'timeout' => 60)
@@ -207,7 +212,7 @@ class EEG_Payfast extends EE_Offsite_Gateway
         }
     }
 
-    public function update_txn_based_on_payment($payment)
+    public function update_txn_based_on_payment($payment): void
     {
         $update_info   = $payment->details();
         $redirect_args = $payment->redirect_args();
@@ -310,17 +315,18 @@ class EEG_Payfast extends EE_Offsite_Gateway
      * @param bool $pfError
      * @param bool $pfDone
      * @param mixed $pfData
+     * @param PaymentRequest $payfastRequest
      *
      * @return array
      */
-    public function processPayment(bool $pfError, bool $pfDone, mixed $pfData): array
+    public function processPayment(bool $pfError, bool $pfDone, mixed $pfData, PaymentRequest $payfastRequest): array
     {
         if (!$pfError && !$pfDone) {
-            PayfastCommon::pflog('check order and update payment status');
+            $payfastRequest->pflog('check order and update payment status');
 
             if ($pfData['payment_status'] == 'COMPLETE') {
-                PayfastCommon::pflog('- Complete');
-                PayfastCommon::pflog('Payfast transaction id: ' . $pfData['pf_payment_id']);
+                $payfastRequest->pflog('- Complete');
+                $payfastRequest->pflog('Payfast transaction id: ' . $pfData['pf_payment_id']);
                 $status           = $this->_pay_model->approved_status();//approved
                 $gateway_response = __('Your payment is approved.', 'event_espresso');
             } elseif ($pfData['payment_status'] == 'Pending') {
@@ -352,13 +358,14 @@ class EEG_Payfast extends EE_Offsite_Gateway
     /**
      * @param bool $pfError
      * @param string $pfErrMsg
+     * @param PaymentRequest $payfastRequest
      *
      * @return void
      */
-    public function checkError(bool $pfError, string $pfErrMsg): void
+    public function checkError(bool $pfError, string $pfErrMsg, PaymentRequest $payfastRequest): void
     {
         if ($pfError) {
-            PayfastCommon::pflog('Error occurred: ' . $pfErrMsg);
+            $payfastRequest->pflog('Error occurred: ' . $pfErrMsg);
         }
     }
 }
