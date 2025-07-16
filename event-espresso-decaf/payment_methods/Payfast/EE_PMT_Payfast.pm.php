@@ -79,7 +79,7 @@ class EE_PMT_Payfast extends EE_PMT_Base
         );
     }
 
-    public function finalize_payment_for($transaction)
+    public function finalize_payment_for($transaction): ?EE_Payment
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             return $this->handle_ipn($_POST, $transaction);

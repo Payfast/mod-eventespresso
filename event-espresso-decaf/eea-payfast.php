@@ -4,12 +4,12 @@
   Plugin Name: Payfast Payment Gateway for Event Espresso
   Plugin URI: https://www.payfast.io
   Description: Payfast payment gateway
-  Version: 1.1.9
+  Version: 1.2.0
   Author: Payfast
   Author URI: https://www.payfast.io
-  Copyright (c) 2024 Payfast (Pty) Ltd
+  Copyright (c) 2025 Payfast (Pty) Ltd
  */
-define('EE_PAYFAST_VERSION', '1.1.9');
+define('EE_PAYFAST_VERSION', '1.2.0');
 define('EE_PAYFAST_PLUGIN_FILE', __FILE__);
 define('EE_PAYFAST_PLUGIN_PATH', plugin_dir_path(__FILE__));
 
