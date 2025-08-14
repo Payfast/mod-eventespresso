@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.1](https://github.com/Payfast/mod-eventespresso/releases/tag/v1.2.1)
+
+### Fixed
+
+- Resolved a folder name conflict with the Event Espresso Decaf plugin.
+
 ## [1.2.0](https://github.com/Payfast/mod-eventespresso/releases/tag/v1.2.0)
 
 ### Added
