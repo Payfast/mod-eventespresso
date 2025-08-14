@@ -130,9 +130,9 @@ class EEG_Payfast extends EE_Offsite_Gateway
 
             $moduleInfo = [
                 "pfSoftwareName"       => 'Event Espresso',
-                "pfSoftwareVer"        => '4.10.46',
+                "pfSoftwareVer"        => '5.0.37',
                 "pfSoftwareModuleName" => 'Payfast-EventEspresso',
-                "pfModuleVer"          => '1.2.0',
+                "pfModuleVer"          => '1.2.1',
             ];
             $pfValid    = $payfastRequest->pfValidData($moduleInfo, $pfHost, $pfParamString);
 

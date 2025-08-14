@@ -1,6 +1,6 @@
 # mod-eventespresso
 
-## Payfast module v1.2.0 for Event Espresso v5.0.37
+## Payfast module v1.2.1 for Event Espresso v5.0.37
 
 This is the Payfast module for Event Espresso. Please feel free
 to [contact the Payfast support team](https://payfast.io/contact/) should you require any assistance.
