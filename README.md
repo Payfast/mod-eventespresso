@@ -7,7 +7,7 @@ to [contact the Payfast support team](https://payfast.io/contact/) should you re
 
 ## Installation
 
-1. Navigate to **Event Espresso > General Settings > Country**. Change _Countries and States/Provinces_ to **South
+1. Navigate to **Event Espresso > General Settings > Countries**. Change _Countries and States/Provinces_ to **South
    Africa**, change _Country Currency Code_ to **ZAR**, _Currency Name Singular_ to **Rand**, 
    _Currency Name Plural_ to **Rands**, _Currency Sign_ to **R**, and _Country ISO3 Code_ to **ZAF**.
 3. Using FTP (or similar), merge the contents of the **event-espresso-decaf** directory with the contents of the
